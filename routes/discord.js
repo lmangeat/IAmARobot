@@ -4,6 +4,11 @@ var router = express.Router();
 var Discord = require("discord.js");
 var mongoose = require('mongoose');
 
+var NewsWarframeDB = require('../models/NewsWarframeDB');
+var NewsWarframe = mongoose.model('NewsWarframe');
+var NewsDatesDB = require('../models/NewsDatesDB');
+var NewsDates = mongoose.model('NewsDates');
+
 
 var bot = null;
 
@@ -59,9 +64,16 @@ router.get('/botoff', function(req, res, next){
 });
 
 function newsWarframe(){
+    var dates = NewsDates
+                .$where('this.lasted_insert < this.lasted_access')
+                .exec(function(){
+                });
 
-
-    bot.sendMessage("116119016891744259", "https://warframe.com/fr/news/orokin-overload-weekend-now"); //#test: 116119016891744259     #Warframe: 101372893669130240
+    if(dates != ""){
+        NewsWarframe
+            console.log(dates);
+    }
+    //bot.sendMessage("116119016891744259", "https://warframe.com/fr/news/orokin-overload-weekend-now"); //#test: 116119016891744259     #Warframe: 101372893669130240
 }
 
 

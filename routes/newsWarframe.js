@@ -11,6 +11,8 @@ var cheerio = require('cheerio');
 
 var NewsWarframeDB = require('../models/NewsWarframeDB');
 var NewsWarframe = mongoose.model('NewsWarframe');
+var NewsDatesDB = require('../models/NewsDatesDB');
+var NewsDates = mongoose.model('NewsDates');
 
 router.get('/getAll', function(req, res, next){
     NewsWarframe.find().exec(function(err, news){
@@ -28,6 +30,19 @@ router.get('/scrapperOn', function(req, res, next){
 
     req.session.scrappNewsWarframe = true;
     res.redirect('/');
+});
+
+router.get('/initDates', function(req, res, next){
+    var dates = new NewsDates({
+        lasted_insert: Date.now(),
+        lasted_access: Date.now()
+    });
+    dates.save(function(err){
+        if(err)
+            res.json({succes: false});
+        else
+            res.json({succes: true});
+    });
 });
 
 function scrappNewsWarframe(){
