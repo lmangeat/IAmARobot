@@ -108,7 +108,7 @@ function newWarframeToJson(){
                     link_url: link_url,
                     titre: titre,
                     content: content,
-                    date: date,
+                    date: Date(date),
                     category: category
                 });
                 news.save();
