@@ -14,8 +14,6 @@ router.get('/getAll', function(req, res, next){
     NewsWarframe.find().exec(function(res, news){
         res.json(news);
     });
-
-    res.json(newWarframeToJson());
 });
 
 module.exports = router;
