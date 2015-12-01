@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -15,6 +16,7 @@ var newsWarframe = require('./routes/newsWarframe');
 var mongoose_uri = process.env.MONGOOSE_URI || "mongodb://root:root@ds061984.mongolab.com:61984/robotdb";
 
 var app = express();
+app.use(session({secret: 'test'}));
 
 console.log("Starting application");
 
@@ -80,7 +82,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {}
+    error: err
   });
 });
 
