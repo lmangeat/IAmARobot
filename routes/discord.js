@@ -112,6 +112,7 @@ function newWarframeToJson(){
                 setTimeout(function(){
                     console.log("attente 1s");
                 }, 1000);
+                return false;
                 if(++nbNews == 10) return false;
             });
         }
