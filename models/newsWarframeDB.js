@@ -14,16 +14,5 @@ var NewsWarframe = new Schema({
     date: { type: Date, required: true},
     category: { type: String, required: true}
 });
-/*
-NewsWarframe.pre('save', function (next) {
-    var thisUrl = this.link_url;
-    NewsWarframe.find({
-        link_url: thisUrl
-    }).exec(function(err, result){
-        if (result == "") {
-            next();
-        }
-    });
-});*/
 
 exports.NewsWarframe = mongoose.model('NewsWarframe', NewsWarframe);

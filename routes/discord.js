@@ -93,25 +93,22 @@ function newWarframeToJson(){
                 date = $(this).find($('.date')).text();
                 date = date.substring(0, date.length - 4);
                 category = $(this).find($('.category')).text();
-                /*
-                json.push({
-                    img_url: img_url,
-                    link_url: link_url,
-                    titre: titre,
-                    content: content,
-                    date: date,
-                    category: category
+
+                NewsWarframe.find({ //Insertion uniquement si non présent
+                    link_url: link_url
+                }).exec(function(err, result){
+                    if (result == "") {
+                        news = new NewsWarframe({
+                            img_url: img_url,
+                            link_url: link_url,
+                            titre: titre,
+                            content: content,
+                            date: Date(date),
+                            category: category
+                        });
+                        news.save();
+                    }
                 });
-                */
-                news = new NewsWarframe({
-                    img_url: img_url,
-                    link_url: link_url,
-                    titre: titre,
-                    content: content,
-                    date: Date(date),
-                    category: category
-                });
-                news.save();
                 if(++nbNews == 10) return false;
             });
         }
