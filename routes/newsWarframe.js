@@ -17,3 +17,5 @@ router.get('/getAll', function(req, res, next){
 
     res.json(newWarframeToJson());
 });
+
+module.exports = router;
