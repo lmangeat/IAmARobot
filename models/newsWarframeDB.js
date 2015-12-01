@@ -12,7 +12,8 @@ var NewsWarframe = new Schema({
     titre: { type: String, required: true},
     content: { type: String, required: true},
     date: { type: Date, required: true},
-    category: { type: String, required: true}
+    category: { type: String, required: true},
+    inserted_at: { type: Date, required: true, default: Date.now()}
 });
 
 exports.NewsWarframe = mongoose.model('NewsWarframe', NewsWarframe);

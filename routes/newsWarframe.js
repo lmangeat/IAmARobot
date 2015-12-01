@@ -71,7 +71,8 @@ function createNewsWarframeIfNotExist(img_url, link_url, titre, content, date, c
                 titre: titre,
                 content: content,
                 date: Date(date),
-                category: category
+                category: category,
+                inserted_at: Date.now()
             });
             news.save();
         }
