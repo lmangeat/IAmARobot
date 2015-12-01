@@ -4,6 +4,11 @@ var router = express.Router();
 var Discord = require("discord.js");
 var request = require('request');
 var cheerio = require('cheerio');
+var mongoose = require('mongoose');
+
+var NewsWarframeDB = require('../models/NewsWarframeDB');
+var NewsWarframe = mongoose.model('NewsWarframe');
+
 var bot = null;
 
 var sess;
@@ -98,14 +103,15 @@ function newWarframeToJson(){
                     category: category
                 });
                 */
-                news = {
+                news = new NewsWarframe({
                     img_url: img_url,
                     link_url: link_url,
                     titre: titre,
                     content: content,
                     date: date,
                     category: category
-                };
+                });
+                news.save();
                 if(++nbNews == 10) return false;
             });
         }

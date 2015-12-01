@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
-var User = new Schema({
+var NewsWarframe = new Schema({
 
     img_url: { type: String, required: true},
     link_url: { type: String, required: true},
@@ -15,9 +15,9 @@ var User = new Schema({
     category: { type: String, required: true}
 });
 
-User.pre('save', function (next) {
+NewsWarframe.pre('save', function (next) {
     var thisUrl = this.link_url;
-    User.find({
+    NewsWarframe.find({
         link_url: thisUrl
     }).exec(function(err, result){
         if (result == "") {
@@ -25,3 +25,5 @@ User.pre('save', function (next) {
         }
     });
 });
+
+exports.NewsWarframe = mongoose.model('NewsWarframe', NewsWarframe);
