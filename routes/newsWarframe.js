@@ -11,7 +11,7 @@ var NewsWarframeDB = require('../models/NewsWarframeDB');
 var NewsWarframe = mongoose.model('NewsWarframe');
 
 router.get('/getAll', function(req, res, next){
-    NewsWarframe.find().exec(function(res, news){
+    NewsWarframe.find().exec(function(err, news){
         res.json(news);
     });
 });
