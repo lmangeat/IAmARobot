@@ -109,6 +109,9 @@ function newWarframeToJson(){
                         news.save();
                     }
                 });
+                setTimeout(function(){
+                    console.log("attente 1s");
+                }, 1000);
                 if(++nbNews == 10) return false;
             });
         }
