@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page D'accueil</title>
+</head>
+<body>
+  <h1>Test</h1>
+  <label for="btDiscordBot">Discord Bot:</label>
+
+  {% if session.botReady %}
+    <a href="/discord/botoff"><button id="btDiscordBotOff" name="btDiscordBot" type="submit">Desactiver le bot</button></a>
+  {% else %}
+  <a href="/discord/boton"><button id="btDiscordBotOn" name="btDiscordBotOn">Activer le bot</button></a>
+  {% endif %}
+
+</body>
+</html>
