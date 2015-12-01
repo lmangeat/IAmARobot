@@ -83,16 +83,16 @@ function newWarframeToJson(){
             var news;
 
             $('.views-row', '.view-content').each(function(i, elem) {
-                if($(this).children().first().attr('class') != 'image'){
+                if($(elem).children().first().attr('class') != 'image'){
                     return;
                 }
-                img_url = $(this).find($('img')).attr('src');
-                link_url = "https://warframe.com" +  $(this).find($('.image')).find($('a')).attr('href');
-                titre = $(this).find($('h2')).text();
-                content = $(this).find($('.body')).text();
-                date = $(this).find($('.date')).text();
+                img_url = $(elem).find($('img')).attr('src');
+                link_url = "https://warframe.com" +  $(elem).find($('.image')).find($('a')).attr('href');
+                titre = $(elem).find($('h2')).text();
+                content = $(elem).find($('.body')).text();
+                date = $(elem).find($('.date')).text();
                 date = date.substring(0, date.length - 4);
-                category = $(this).find($('.category')).text();
+                category = $(elem).find($('.category')).text();
 
                 NewsWarframe.find({ //Insertion uniquement si non présent
                     link_url: link_url
