@@ -94,30 +94,32 @@ function newWarframeToJson(){
                 date = date.substring(0, date.length - 4);
                 category = $(elem).find($('.category')).text();
 
-                NewsWarframe.find({ //Insertion uniquement si non présent
-                    link_url: link_url
-                }).exec(function(err, result){
-                    if (result == "") {
-                        news = new NewsWarframe({
-                            img_url: img_url,
-                            link_url: link_url,
-                            titre: titre,
-                            content: content,
-                            date: Date(date),
-                            category: category
-                        });
-                        news.save();
-                    }
-                });
-                setTimeout(function(){
-                    console.log("attente 1s");
-                }, 1000);
-                return false;
+                createNewsWarframeIfNotExist(img_url, link_url, titre, content, date, category);
+
+                //return false;
                 if(++nbNews == 10) return false;
             });
         }
     });
     return json;
+}
+
+function createNewsWarframeIfNotExist(img_url, link_url, titre, content, date, category){
+    NewsWarframe.find({ //Insertion uniquement si non présent
+        link_url: link_url
+    }).exec(function(err, result){
+        if (result == "") {
+            news = new NewsWarframe({
+                img_url: img_url,
+                link_url: link_url,
+                titre: titre,
+                content: content,
+                date: Date(date),
+                category: category
+            });
+            news.save();
+        }
+    });
 }
 
 module.exports = router;
