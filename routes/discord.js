@@ -63,16 +63,27 @@ router.get('/botoff', function(req, res, next){
     });
 });
 
+router.get('/testDates', function(req, res, next){
+    var dates = NewsDates
+        .$where('this.lasted_insert < this.lasted_access')
+        .exec(function(){
+        });
+
+    console.log(dates);
+});
+
 function newsWarframe(){
     var dates = NewsDates
                 .$where('this.lasted_insert < this.lasted_access')
                 .exec(function(){
                 });
 
+    console.log(dates);
+    /*
     if(dates != ""){
-        NewsWarframe
-            console.log(dates);
+        console.log(dates);
     }
+    */
     //bot.sendMessage("116119016891744259", "https://warframe.com/fr/news/orokin-overload-weekend-now"); //#test: 116119016891744259     #Warframe: 101372893669130240
 }
 
