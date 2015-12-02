@@ -65,7 +65,7 @@ router.get('/botoff', function(req, res, next){
 
 router.get('/testDates', function(req, res, next){
     var dates = NewsDates
-        .$where('this.lasted_insert <= this.lasted_access')
+        .$where('this.lasted_insert.$date <= this.lasted_access.$date')
         .exec(function(){
         });
 
