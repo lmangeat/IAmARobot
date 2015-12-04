@@ -44,7 +44,7 @@ router.get('/boton', function(req, res, next) {
         }
         senMess();*/
         newsWarframe();
-        setInterval(newsWarframe, 24 * 60 * 60 * 1000);
+        setInterval(newsWarframe, 5 * 60 * 1000);
 
         console.log('Bot ready !');
         sess.botReady = true;
@@ -64,28 +64,64 @@ router.get('/botoff', function(req, res, next){
 });
 
 router.get('/testDates', function(req, res, next){
-    var dates = NewsDates
-        .$where('this.lasted_insert.$date <= this.lasted_access.$date')
-        .exec(function(){
-        });
-
-    console.log(dates);
+    NewsDates.find().exec(function(err, tabDates){
+        if(!err){
+            var dates = tabDates[0];
+            if(dates.lasted_access <= dates.lasted_insert){
+                var lasted_access = dates.lasted_access;
+                NewsWarframe
+                    .where('inserted_at').gt(lasted_access)
+                    .exec(function(err, tabNews){
+                        for(var i = 0; i<tabNews.length; i++){
+                            /*bot.sendFile("116119016891744259", tabNews[i].img_url, "Image Alerte WF", function(err, msg){
+                                if(!err){
+                                    bot.sendMessage("116119016891744259", tabNews[i].titre + tabNews[i].content + tabNews[i].link_url); //#test: 116119016891744259     #Warframe: 101372893669130240
+                                }
+                            });*/
+                        }
+                        res.send(tabNews[0].titre + "\n" + tabNews[0].content + "\n" + tabNews[0].link_url);
+                        //res.json(news);
+                    });
+                //bot.sendMessage("116119016891744259", "https://warframe.com/fr/news/orokin-overload-weekend-now"); //#test: 116119016891744259     #Warframe: 101372893669130240
+            }
+        }
+    });
 });
 
 function newsWarframe(){
-    var dates = NewsDates
-                .$where('this.lasted_insert < this.lasted_access')
-                .exec(function(){
+    NewsDates.find().exec(function(err, tabDates){
+        if(!err){
+            var dates = tabDates[0];
+            if(dates.lasted_access <= dates.lasted_insert){
+                var lasted_access = dates.lasted_access;
+                NewsWarframe
+                .where('category').equals("PC")
+                .where('inserted_at').gt(lasted_access)
+                .exec(function(err, tabNews){
+                    for(var i = 0; i<tabNews.length; i++){
+                        /*bot.sendFile("116119016891744259", tabNews[i].img_url, "Image Alerte WF", function(err, msg){
+                            if(!err){
+                                bot.sendMessage("116119016891744259", tabNews[i].titre + tabNews[i].content + tabNews[i].link_url); //#test: 116119016891744259     #Warframe: 101372893669130240
+                            }
+                        });*/
+
+                        bot.sendMessage("101372893669130240", tabNews[i].img_url + "\n\n\n" + tabNews[i].titre + "\n" + tabNews[i].content + "\n" + tabNews[i].link_url); //#test: 116119016891744259     #Warframe: 101372893669130240
+
+                        NewsDates.update(
+                            {},
+                            {$set: {
+                                lasted_access : Date.now()
+                            }},
+                            {multi: true}
+                        ).exec(function(err){
+                            if(err)
+                                console.log(err);
+                        });
+                    }
                 });
-
-    console.log(dates);
-    /*
-    if(dates != ""){
-        console.log(dates);
-    }
-    */
-    //bot.sendMessage("116119016891744259", "https://warframe.com/fr/news/orokin-overload-weekend-now"); //#test: 116119016891744259     #Warframe: 101372893669130240
+            }
+        }
+    });
 }
-
 
 module.exports = router;

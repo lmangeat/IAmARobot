@@ -45,6 +45,12 @@ router.get('/initDates', function(req, res, next){
     });
 });
 
+router.get('/showDates', function(req, res, next){
+    NewsDates.find().exec(function(err, dates){
+        res.json(dates);
+    });
+});
+
 function scrappNewsWarframe(){
     var url = "https://warframe.com/fr";
     request(url, function(error, result, html){
@@ -68,7 +74,7 @@ function scrappNewsWarframe(){
                 createNewsWarframeIfNotExist(img_url, link_url, titre, content, date, category);
 
                 //return false;
-                if(++nbNews == 10) return false; //Requete sur 10 entrées uniquement (perf)
+                if(++nbNews == 10) return false; //Requete sur 10 entrï¿½es uniquement (perf)
             });
         }
     });
@@ -76,7 +82,7 @@ function scrappNewsWarframe(){
 }
 
 function createNewsWarframeIfNotExist(img_url, link_url, titre, content, date, category){
-    NewsWarframe.find({ //Insertion uniquement si non présent
+    NewsWarframe.find({ //Insertion uniquement si non prï¿½sent
         link_url: link_url
     }).exec(function(err, result){
         if (result == "") {
@@ -90,6 +96,17 @@ function createNewsWarframeIfNotExist(img_url, link_url, titre, content, date, c
                 inserted_at: Date.now()
             });
             news.save();
+
+            NewsDates.update(
+                {},
+                {$set: {
+                    lasted_insert : Date.now()
+                }},
+                {multi: true}
+            ).exec(function(err){
+                if(err)
+                    console.log(err);
+            });
         }
     });
 }
