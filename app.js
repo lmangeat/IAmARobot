@@ -12,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var discord = require('./routes/discord');
 var newsWarframe = require('./routes/newsWarframe');
+var alertsWarframe = require('./routes/alertsWarframe');
 
 var mongoose_uri = process.env.MONGOOSE_URI || "mongodb://root:root@ds061984.mongolab.com:61984/robotdb";
 
@@ -54,6 +55,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/discord', discord);
 app.use('/newsWarframe', newsWarframe);
+app.use('/alertsWarframe', alertsWarframe);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
