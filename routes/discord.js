@@ -50,6 +50,8 @@ router.get('/boton', function(req, res, next) {
         sess.botReady = true;
         res.redirect('/');
     });
+
+    bot.login("jagaimo.robot@gmail.com", "jagaimo-robot");
 });
 
 router.get('/botoff', function(req, res, next){
@@ -87,7 +89,7 @@ router.get('/testDates', function(req, res, next){
 });
 
 function newsWarframe(){
-    bot.login("jagaimo.robot@gmail.com", "jagaimo-robot");
+    //bot.login("jagaimo.robot@gmail.com", "jagaimo-robot");
 
     NewsDates.find().exec(function(err, tabDates){
         if(!err){
