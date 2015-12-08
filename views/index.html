@@ -22,5 +22,13 @@
     <a href="/newsWarframe/scraperOn"><button id="btNewsScraperOn" name="btNewsScraperOn">Activer le Scraper news Warframe</button></a>
     {% endif %}
   </p>
+
+  <p>
+    {% if session.scrapeNewsWarframe %}
+    [Scraper alerts Warframe actif]
+    {% else %}
+    <a href="/alertsWarframe/scraperOn"><button id="btAlertsScraperOn" name="btAlertsScraperOn">Activer le Scraper alerts Warframe</button></a>
+    {% endif %}
+  </p>
 </body>
 </html>
