@@ -20,15 +20,15 @@ router.get('/getAll', function(req, res, next){
     });
 });
 
-router.get('/testScrapper', function(req, res, next){
-    res.json(scrappNewsWarframe());
+router.get('/testScraper', function(req, res, next){
+    res.json(scrapeNewsWarframe());
 });
 
-router.get('/scrapperOn', function(req, res, next){
-    scrappNewsWarframe();
-    setInterval(scrappNewsWarframe, 5 * 60 * 1000); // [h *] [m *] [s *] ms (ici: 5min)
+router.get('/scraperOn', function(req, res, next){
+    scrapeNewsWarframe();
+    setInterval(scrapeNewsWarframe, 5 * 60 * 1000); // [h *] [m *] [s *] ms (ici: 5min)
 
-    req.session.scrappNewsWarframe = true;
+    req.session.scrapeNewsWarframe = true;
     res.redirect('/');
 });
 
@@ -51,7 +51,7 @@ router.get('/showDates', function(req, res, next){
     });
 });
 
-function scrappNewsWarframe(){
+function scrapeNewsWarframe(){
     var url = "https://warframe.com/fr";
     request(url, function(error, result, html){
         if(!error){

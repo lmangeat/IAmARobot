@@ -11,17 +11,18 @@ var AlertWarframeDB = require('../models/AlertWarframeDB');
 var AlertWarframe = mongoose.model('AlertWarframe');
 
 var alertRegExStr = /([a-zA-Z]*)\s\(([a-zA-Z]*)\):\s([^\-]*)\s-\s([0-9]*)m\s-\s([0-9]*)cr(.*)/;
+//var alertRegExStr2 = /([a-zA-Z]*)\s\(([a-zA-Z]*)\)\s\|\s([a-zA-Z]*)\s\(([a-zA-Z]*)\)\s\|\s([a-zA-Z\(\)\s]*)\s\|\sStarts\sin\s([0-9]*)m\s\|\s([0-9]*)m\s\|\s([0-9,]*)cr(.*)/;
 
-router.get('/testTwitter', function(req, res, next){
-    var client = new Twitter({
-        consumer_key: 'Edl4i579RJ6s5dAvDL0zUUm3r',
-        consumer_secret: 'lD5dMlhiuLvS2p9V10cz8EziJSkr6znF8aXkuS0UtSAFfL0cLW',
-        access_token_key: '610937782-5dCYHFgBvMX9Qz3LlKLMpBiLK3J0285fZn4XHp5c',
-        access_token_secret: '9Qzi2ty2CNLiX2hZpdkJHzm29SBZGwGt4xzLnn9tHAdP8'
-    });
+var clientTwitter = new Twitter({
+    consumer_key: 'Edl4i579RJ6s5dAvDL0zUUm3r',
+    consumer_secret: 'lD5dMlhiuLvS2p9V10cz8EziJSkr6znF8aXkuS0UtSAFfL0cLW',
+    access_token_key: '610937782-5dCYHFgBvMX9Qz3LlKLMpBiLK3J0285fZn4XHp5c',
+    access_token_secret: '9Qzi2ty2CNLiX2hZpdkJHzm29SBZGwGt4xzLnn9tHAdP8'
+});
 
-    var params = {screen_name: 'WarframeAlerts', count: 10};
-    client.get('statuses/user_timeline', params, function(error, tweets, response){
+router.get('/getCurrentsAlerts', function(req, res, next){
+    var params = {screen_name: 'WarframeAlerts', count: 5};
+    clientTwitter.get('statuses/user_timeline', params, function(error, tweets, response){
         if (!error) {
             var id, planet, mission, description, duration, credits, reward, begin, end, inserted_at;
             var result = [];
@@ -31,39 +32,78 @@ router.get('/testTwitter', function(req, res, next){
                 var tweet = tweets[i];
                 if( (arrMatches = tweet.text.match(alertRegEx)) ) {
                     id = tweet.id;
-                    console.log("id: " + id);
                     planet = arrMatches[2];
-                    console.log("planet: " + planet);
                     mission = arrMatches[1];
-                    console.log("mission: " + mission);
                     description = arrMatches[3];
-                    console.log("description: " + description);
                     duration = parseInt(arrMatches[4]);
-                    console.log("duration: " + duration);
                     credits = parseInt(arrMatches[5]);
-                    console.log("credits: " + credits);
                     reward = (arrMatches[6]) ? arrMatches[6].substring(3) : "";
-                    console.log("reward: " + reward);
                     begin = new Date(tweet.created_at);
-                    console.log("begin: " + begin);
                     end = new Date(tweet.created_at);
                     end.setMinutes(end.getMinutes() + duration);
-                    console.log("end: " + end);
-                    inserted_at = Date.now();
-                    console.log("inserted_at: " + inserted_at);
 
-                    result.push({
-                        "id": id,
-                        "planet": planet,
-                        "mission": mission,
-                        "description": description,
-                        "duration": duration,
-                        "credits": credits,
-                        "reward": reward,
-                        "begin": begin,
-                        "end": end,
-                        "inserted_at": inserted_at
-                    });
+                    if(end > Date.now()){
+                        result.push({
+                            "id": id,
+                            "planet": planet,
+                            "mission": mission,
+                            "description": description,
+                            "duration": duration,
+                            "credits": credits,
+                            "reward": reward,
+                            "begin": begin,
+                            "end": end
+                        });
+                    }
+                }
+            }
+            res.json(result);
+        }
+    });
+});
+/*
+router.get('/getCurrentsAlerts2', function(req, res, next){
+    var params = {screen_name: 'WFAlertsMods', count: 5};
+    clientTwitter.get('statuses/user_timeline', params, function(error, tweets, response){
+        if (!error) {
+            var id, planet, mission, description, duration, credits, reward, begin, end, missionType, faction;
+            var result = [];
+            var arrMatches;
+            var alertRegEx = new RegExp(alertRegExStr2);
+            for(var i = 0; i<tweets.length; i++){
+                var tweet = tweets[i];
+                if( (arrMatches = tweet.text.match(alertRegEx)) ) {
+                    console.log("------------------------------------------------");
+                    id = tweet.id; console.log("id: " + id);
+                    planet = arrMatches[2]; console.log("planet: " + planet);
+                    mission = arrMatches[1]; console.log("mission: " + mission);
+                    missionType = arrMatches[3]; console.log("missionType: " + missionType);
+                    faction = arrMatches[4]; console.log("faction: " + faction);
+                    description = arrMatches[5]; console.log("description: " + description);
+                    duration = parseInt(arrMatches[7]); console.log("duration: " + duration);
+                    credits = parseInt(arrMatches[8].replace(",", "")); console.log("credits: " + credits);
+                    reward = (arrMatches[9]) ? arrMatches[9].substring(3) : ""; console.log("reward: " + reward);
+                    begin = new Date(tweet.created_at);
+                    begin.setMinutes(begin.getMinutes() + parseInt(arrMatches[6])); console.log("begin: " + begin);
+                    end = new Date(tweet.created_at);
+                    end.setMinutes(end.getMinutes() + duration); console.log("end: " + end);
+                    console.log("------------------------------------------------");
+
+                    if(end > Date.now()){
+                        result.push({
+                            "id": id,
+                            "planet": planet,
+                            "mission": mission,
+                            "missionType": missionType,
+                            "faction": faction,
+                            "description": description,
+                            "duration": duration,
+                            "credits": credits,
+                            "reward": reward,
+                            "begin": begin,
+                            "end": end
+                        });
+                    }
                 }else{
                     result.push({"match": false});
                 }
@@ -72,7 +112,7 @@ router.get('/testTwitter', function(req, res, next){
         }
     });
 });
-
+*/
 router.get('/testDates', function(req, res, next){
     var date = new Date("Mon Dec 07 10:12:02 +0000 2015");
     console.log(date);
@@ -80,24 +120,17 @@ router.get('/testDates', function(req, res, next){
     console.log(date);
 });
 
-router.get('/scrapperOn', function(req, res, next){
-    scrappAlertsWarframe();
-    setInterval(scrappAlertsWarframe, 60 * 1000); // [h *] [m *] [s *] ms (ici: 1min)
+router.get('/scraperOn', function(req, res, next){
+    scrapeAlertsWarframe();
+    setInterval(scrapeAlertsWarframe, 60 * 1000); // [h *] [m *] [s *] ms (ici: 1min)
 
-    req.session.scrappAlertsWarframe = true;
+    req.session.scrapeAlertsWarframe = true;
     res.redirect('/');
 });
 
-function scrappAlertsWarframe(){
-    var client = new Twitter({
-        consumer_key: 'Edl4i579RJ6s5dAvDL0zUUm3r',
-        consumer_secret: 'lD5dMlhiuLvS2p9V10cz8EziJSkr6znF8aXkuS0UtSAFfL0cLW',
-        access_token_key: '610937782-5dCYHFgBvMX9Qz3LlKLMpBiLK3J0285fZn4XHp5c',
-        access_token_secret: '9Qzi2ty2CNLiX2hZpdkJHzm29SBZGwGt4xzLnn9tHAdP8'
-    });
-
+function scrapeAlertsWarframe(){
     var params = {screen_name: 'WarframeAlerts', count: 5};
-    client.get('statuses/user_timeline', params, function(error, tweets, response){
+    clientTwitter.get('statuses/user_timeline', params, function(error, tweets, response){
         if (!error) {
             var id, planet, mission, description, duration, credits, reward, begin, end, inserted_at;
             var arrMatches;

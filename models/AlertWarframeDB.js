@@ -18,4 +18,13 @@ var AlertWarframe = new Schema({
     inserted_at: { type: Date, required: true}
 });
 
+AlertWarframe.methods.toString = function () {
+    var result = this.mission + " (" + this.planet + "): " + this.description + " - " + this.duration + "m - " + this.credits + "cr";
+
+    if(this. reward && this.reward != "")
+        result += " - " + this.reward;
+
+    return result;
+};
+
 exports.AlertWarframe = mongoose.model('AlertWarframe', AlertWarframe);

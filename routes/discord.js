@@ -8,7 +8,8 @@ var NewsWarframeDB = require('../models/NewsWarframeDB');
 var NewsWarframe = mongoose.model('NewsWarframe');
 var NewsDatesDB = require('../models/NewsDatesDB');
 var NewsDates = mongoose.model('NewsDates');
-
+var AlertWarframeDB = require('../models/AlertWarframeDB');
+var AlertWarframe = mongoose.model('AlertWarframe');
 
 var bot = null;
 
@@ -24,7 +25,7 @@ router.get('/boton', function(req, res, next) {
 
     bot.on("message", function(message){
 
-        if( message.content.toLowerCase() === "avatar".toLowerCase() ){
+        if( message.content.toLowerCase() === "/avatar".toLowerCase() ){
 
             var usersAvatar = message.sender.avatarURL;
 
@@ -35,6 +36,10 @@ router.get('/boton', function(req, res, next) {
                 // user doesn't have an avatar
                 bot.reply(message, "Vous n'avez pas d'avatar");
             }
+        }
+
+        if( message.content.toLowerCase() === "/alerts".toLowerCase() ){
+            bot.reply(message, curentsAlertsWarframe());
         }
     });
 
@@ -124,6 +129,19 @@ function newsWarframe(){
             }
         }
     });
+}
+
+function curentsAlertsWarframe(){
+    var now = new Date();
+    var result = "";
+    AlertWarframe
+        .where('end').gt(now)
+        .exec(function(err, alerts){
+            for(var i = 0; i< alerts.length; i++){
+                result += alerts[i].toString() + "\n\n";
+            }
+        });
+    return result;
 }
 
 module.exports = router;
