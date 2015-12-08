@@ -2,6 +2,7 @@
  * Created by lmangeat on 07/12/2015.
  */
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 
 var Twitter = require('twitter');
