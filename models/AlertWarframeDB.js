@@ -18,4 +18,4 @@ var AlertWarframe = new Schema({
     inserted_at: { type: Date, required: true}
 });
 
-exports.NewsWarframe = mongoose.model('NewsWarframe', NewsWarframe);
+exports.AlertWarframe = mongoose.model('AlertWarframe', AlertWarframe);
