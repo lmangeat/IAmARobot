@@ -48,6 +48,8 @@ router.get('/boton', function(req, res, next) {
             bot.sendMessage("116119016891744259", "Message de test.");
         }
         senMess();*/
+        setInterval(keepAlive, 60 * 1000);
+
         newsWarframe();
         setInterval(newsWarframe, 5 * 60 * 1000);
 
@@ -143,6 +145,10 @@ function curentsAlertsWarframe(bot, message){
             }
             bot.reply(message, result);
         });
+}
+
+function keepAlive(){
+    bot.setStatusOnline();
 }
 
 module.exports = router;
