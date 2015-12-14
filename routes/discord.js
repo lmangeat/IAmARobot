@@ -39,7 +39,7 @@ router.get('/boton', function(req, res, next) {
         }
 
         if( message.content.toLowerCase() === "/alerts".toLowerCase() ){
-            bot.reply(message, curentsAlertsWarframe());
+            curentsAlertsWarframe(bot, message);
         }
     });
 
@@ -95,7 +95,6 @@ router.get('/testDates', function(req, res, next){
 
 function newsWarframe(){
     //bot.login("jagaimo.robot@gmail.com", "jagaimo-robot");
-
     NewsDates.find().exec(function(err, tabDates){
         if(!err){
             var dates = tabDates[0];
@@ -131,17 +130,19 @@ function newsWarframe(){
     });
 }
 
-function curentsAlertsWarframe(){
+function curentsAlertsWarframe(bot, message){
     var now = new Date();
-    var result = "";
+    var result = "\n";
     AlertWarframe
         .where('end').gt(now)
         .exec(function(err, alerts){
+            if(alerts == "")
+                result = "Il n'y a pas d'alerte en ce moment";
             for(var i = 0; i< alerts.length; i++){
                 result += alerts[i].toString() + "\n\n";
             }
+            bot.reply(message, result);
         });
-    return result;
 }
 
 module.exports = router;
