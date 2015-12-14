@@ -48,6 +48,8 @@ router.get('/boton', function(req, res, next) {
             bot.sendMessage("116119016891744259", "Message de test.");
         }
         senMess();*/
+        setInterval(keepAlive, 60 * 1000);
+
         newsWarframe();
         setInterval(newsWarframe, 5 * 60 * 1000);
 
@@ -95,7 +97,6 @@ router.get('/testDates', function(req, res, next){
 
 function newsWarframe(){
     //bot.login("jagaimo.robot@gmail.com", "jagaimo-robot");
-
     NewsDates.find().exec(function(err, tabDates){
         if(!err){
             var dates = tabDates[0];
@@ -142,6 +143,10 @@ function curentsAlertsWarframe(){
             }
         });
     return result;
+}
+
+function keepAlive(){
+    bot.setStatusOnline();
 }
 
 module.exports = router;
